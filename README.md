@@ -62,6 +62,12 @@ docker-compose --version
 git clone https://github.com/BasudevBharatBhushan/kibiz-n8n-docker-compose
 ```
 
+#### Check Docker-Compose Configuration (If env variables are set properly)
+
+```
+eval $(egrep -v '^#' .env | xargs) docker-compose config
+```
+
 ### Step 3: Start n8n process
 
 #### Start Docker Compose
