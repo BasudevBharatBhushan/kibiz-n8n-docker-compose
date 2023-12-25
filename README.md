@@ -1,4 +1,26 @@
-# n8n with PostgreSQL
+# Deploy n8n with Postgresql on EC2
+
+## Pre-requisits
+
+### Curl
+
+```
+sudo apt update
+sudo apt install curl
+```
+
+### Vim
+
+```
+sudo apt install vim
+vim --version
+```
+
+### Ngnix (For Reverse Proxy)
+
+```
+sudo apt-get install nginx
+```
 
 Starts n8n with PostgreSQL as database.
 
@@ -43,8 +65,6 @@ docker --version
 #### Install Docker Compose
 
 ```
-sudo apt update
-sudo apt install curl
 sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
@@ -80,4 +100,12 @@ docker-compose up -d
 
 ```
 docker-compose down
+```
+
+---
+
+## To check logs of application
+
+```
+docker-compose logs -f
 ```
