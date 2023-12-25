@@ -1,0 +1,71 @@
+version: "3.8"
+
+volumes:
+  db_storage:
+  n8n_storage:
+
+services:
+  postgres:
+    image: postgres:11
+    restart: always
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_NON_ROOT_USER
+      - POSTGRES_NON_ROOT_PASSWORD
+
+    volumes:
+      - db_storage:/var/lib/postgresql/data
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    environment:
+      - PORT
+      - N8N_ENCRYPTION_KEY
+      - VUE_APP_URL_BASE_API
+      - WEBHOOK_URL
+      - TUNNEL_WEBHOOK_URL
+      - GENERIC_TIMEZONE
+      - TZ
+      - N8N_LOG_LEVEL
+      - DB_POSTGRESDB_HOST
+      - DB_TYPE
+      - DB_POSTGRESDB_DATABASE
+      - DB_POSTGRESDB_PORT
+      - DB_POSTGRESDB_USER
+      - DB_POSTGRESDB_SCHEMA
+      - DB_POSTGRESDB_PASSWORD
+      - EXECUTIONS_DATA_PRUNE
+      - EXECUTIONS_DATA_MAX_AGE
+      - EXECUTIONS_DATA_SAVE_ON_ERROR
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS
+      - EXECUTIONS_DATA_SAVE_ON_PROGRESS
+      - EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS
+      - N8N_EMAIL_MODE
+      - N8N_SMTP_HOST
+      - N8N_SMTP_PORT
+      - N8N_SMTP_SSL
+      - N8N_SMTP_USER
+      - N8N_SMTP_PASS
+      - N8N_SMTP_SENDER
+    ports:
+      - 5678:5678
+    links:
+      - postgres
+    volumes:
+      - n8n_storage:/home/node/.n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
