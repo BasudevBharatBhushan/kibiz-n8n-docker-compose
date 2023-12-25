@@ -109,3 +109,7 @@ docker-compose down
 ```
 docker-compose logs -f
 ```
+
+## Ngnix setup config doc
+
+Link - https://community.n8n.io/t/connection-lost-warning/29966/6
