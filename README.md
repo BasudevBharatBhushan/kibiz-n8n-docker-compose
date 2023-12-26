@@ -110,6 +110,113 @@ docker-compose down
 docker-compose logs -f
 ```
 
-## Ngnix setup config doc
+### Step 4: Ngnix Setup
 
-Link - https://community.n8n.io/t/connection-lost-warning/29966/6
+n8n Ngnix Setup - Link - https://community.n8n.io/t/connection-lost-warning/29966/6
+
+#### Go to the Default Configuration of Nginx using vim
+
+```
+sudo vim /etc/ngnix/site-available/default
+```
+
+```
+ location / {
+                proxy_pass http://127.0.0.1:5678;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'Upgrade';
+                proxy_set_header Host $host;
+                chunked_transfer_encoding off;
+                proxy_buffering off;
+                proxy_cache off;
+                # First attempt to serve request as file, then
+                # as directory, then fall b
+                #ack to displaying a 404.
+                #try_files $uri $uri/ =404;
+        }
+```
+
+#### Test Nginx syntax
+
+```
+sudo ngnix -t
+```
+
+### Step 5: SSL Setup using Certbot
+
+[Offical Link](https://certbot.eff.org/instructions?ws=nginx&os=ubuntufocal)
+
+#### Install Snapd
+
+```
+sudo apt update
+sudo apt install snapd
+```
+
+#### Install Certbot
+
+```
+sudo snap install --classic certbot
+
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+```
+
+#### Generate certificate
+
+```
+sudo certbot --nginx -d kiflow.kibizsystems.com
+```
+
+#### Test Certbot
+
+```
+sudo certbot renew --dry-run
+```
+
+---
+
+## Commands to interact with the postgresql
+
+### Access the Postgresql terminal
+
+```
+sudo docker exec -it <containerID> bash
+```
+
+### List all the databases
+
+```
+sudo -u postgres psql -c '\l'
+```
+
+### Go to the N8N database terminal
+
+```
+psql -U postgres -d n8n
+
+```
+
+### List all the tables
+
+```
+\dt
+```
+
+### To query a table
+
+```
+SELECT * FROM "user";
+```
+
+### To exit of the terminal
+
+```
+\q
+```
+
+### To exit of psql shell
+
+```
+exit
+```
