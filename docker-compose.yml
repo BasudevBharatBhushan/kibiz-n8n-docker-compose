@@ -60,6 +60,8 @@ services:
       - N8N_SMTP_USER
       - N8N_SMTP_PASS
       - N8N_SMTP_SENDER
+      - WEBHOOK_TUNNEL_URL
+      - N8N_EDITOR_BASE_URL
     ports:
       - 5678:5678
     links:
